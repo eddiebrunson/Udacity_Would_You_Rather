@@ -1,9 +1,9 @@
-export const RECEIVE_POLLS = 'RECEIVE_POLLS'
+export const RECEIVE_QUESTIONS = 'RECEIVE_QUESTIONS'
 
-export function receivePolls (polls) {
+export function receiveQuestions (questions) {
 	return {
-		type: RECEIVE_POLLS,
-		polls 
+		type: RECEIVE_QUESTIONS,
+		questions,
 	}
 } 
 
