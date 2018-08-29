@@ -1,29 +1,76 @@
-import React, { Component } from 'react';
-//import logo from './logo.svg';
+
+import React, { Component, Fragment } from 'react'
+import '../style/style.css'
 import { connect } from 'react-redux'
+import { Route, Redirect, withRouter } from 'react-router-dom'
+import LoadingBar from 'react-redux-loading'
 import { handleInitialData } from '../actions/shared'
 import Dashboard from './Dashboard'
-//import './App.css';
+import Nav from './Nav'
+import Login from './Login'
+import LeaderBoard from './LeaderBoard'
+import AddQuestion from './AddQuestion'
+import QuestionDetail from './QuestionDetail'
+
 
 class App extends Component {
+
   componentDidMount() {
-    this.props.dispatch(handleInitialData())
+    const {dispatch} = this.props
+    dispatch(handleInitialData())
   }
+
+  checkAuthedUser() {
+    const { authedUser } = this.props
+    return authedUser === null
+      ? <Redirect to='/login' />
+      : <div>
+          <Nav />
+          <Redirect to='/dashboard' />
+        </div>
+  }
+
   render() {
+    const { loading } = this.props
     return (
-      <div>
-        {this.pros.loading === true
+      <Fragment>
+        <LoadingBar style={{ backgroundColor: 'blue', height: '12px' }}/>
+        {/* Displaying content only if data is loaded */}
+        { loading === 1
           ? null
-          : <Dashboard />}
-      </div>
+          : <Fragment>
+              {this.checkAuthedUser()}
+              <Route
+                exact path='/login'
+                component={Login}
+              />
+              <Route
+                exact path='/dashboard'
+                component={Dashboard}
+              />
+              <Route
+                exact path='/leaderBoard'
+                component={LeaderBoard}
+              />
+              <Route
+                exact path='/add'
+                component={AddQuestion}
+              />
+              <Route
+                exact path='/questions/:id'
+                component={QuestionDetail}
+              />
+          </Fragment>}
+      </Fragment>
     )
   }
 }
 
-function mapStateToProps ({ authedUser }) {
+function mapStateToProps ({ authedUser, loadingBar }) {
   return {
-    loading: authedUser === null
+    loading: loadingBar.default,
+    authedUser,
   }
 }
 
-export default connect()(App);
+export default withRouter(connect(mapStateToProps)(App))

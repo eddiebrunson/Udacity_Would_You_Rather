@@ -1,27 +1,93 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
 
-class Dashboard extends Component {
+import React, { Fragment } from 'react'
+import { connect } from 'react-redux'
+import LoadingBar from 'react-redux-loading'
+
+import Question from './Question.js'
+
+class Dashboard extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { isToggle: false }
+    this.handleToggleQuestions = this.handleToggleQuestions.bind(this);
+    this.handleToggleAnswers = this.handleToggleAnswers.bind(this);
+  }
+
+  handleToggleQuestions = (e) => {
+    e.preventDefault()
+    this.setState({isToggle: true})
+  }
+
+  handleToggleAnswers = (e) => {
+    e.preventDefault()
+    this.setState({isToggle: false})
+  }
+
+  displayAnswers() {
+    const { answeredIds } = this.props
+    return answeredIds
+      ? answeredIds.map(id =>
+        (<li key={id}>
+          {<Question id={id}/>}
+        </li>))
+      : null
+  }
+
+  displayUnanswers() {
+    const { questionsIds, answeredIds } = this.props
+    return answeredIds
+      ? questionsIds
+        .filter(id => !answeredIds.includes(id))
+        .map(id =>
+        (<li key={id}>
+          {<Question id={id}/>}
+        </li>))
+      : null
+  }
+
   render() {
+    const { loading } = this.props
     return (
-      <div>
-        <h3 className='center'>Your Timeline</h3>
-        <ul className='dashboard-list'>
-          {this.props.questionIds.map((id) => (
-            <li key={id}>
-              <div>Question ID: {id}</div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <Fragment>
+        <LoadingBar style={{ backgroundColor: 'blue', height: '12px', bottom:'50%' }}/>
+        { loading === 1
+          ? null
+          : <Fragment>
+              <div className='dashboard'>
+                <div className="filter">
+                  <h1
+                    onClick={this.handleToggleAnswers}
+                    style={{fontWeight: !this.state.isToggle ? '500' : '100'}}>
+                    UNANSWERED QUESTIONS
+                  </h1>
+                  <h1
+                    onClick={this.handleToggleQuestions}
+                    style={{fontWeight: this.state.isToggle ? '500' : '100'}}>
+                    ANSWERED QUESTIONS
+                  </h1>
+                </div>
+                <ul>
+                  {this.state.isToggle ? this.displayAnswers() : this.displayUnanswers()}
+                </ul>
+              </div>
+            </Fragment>}
+        </Fragment>
     )
   }
 }
 
-function mapStateToProps ({ questions }) {
+function mapStateToProps ({ authedUser, users, questions, loadingBar }) {
+  const user = authedUser ? Object.values(authedUser) : null
+  const answered = user ? users[user].answers : null
+  const questionsIds = Object.keys(questions)
   return {
-    questionIds: Object.keys(questions)
-      .sort((a,b) => questions[b].timestamp - questions[a].timestamp)
+    loading: loadingBar.default,
+    answeredIds: answered
+    ? Object.keys(answered)
+      .sort((a, b) => questions[b].timestamp - questions[a].timestamp)
+    : null,
+    questionsIds: questionsIds
+      .sort((a, b) => questions[b].timestamp - questions[a].timestamp),
   }
 }
 
