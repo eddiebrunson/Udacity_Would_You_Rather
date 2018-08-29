@@ -1,4 +1,4 @@
-# Udacity MyReads Project 2
+:large_blue_circle: # Udacity MyReads Project 2 :large_blue_circle:
 
 ___
 
