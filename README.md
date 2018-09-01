@@ -19,7 +19,7 @@ git clone https://github.com/eddiebrunson/Udacity_Would_You_Rather.git
 
 ---
 
-:large_red_circle: The preset password to login to each user is: Udacity :large_blue_circle:
+:large_red_circle: The preset password to login to each user is: Udacity :large_red_circle:
 
 ## TL;DR
 
