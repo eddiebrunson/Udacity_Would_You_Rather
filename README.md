@@ -17,6 +17,10 @@ To install you can download this project to your local machine by:
 git clone https://github.com/eddiebrunson/Udacity_Would_You_Rather.git
 ```
 
+---
+
+:large_red_circle: The preset password to login to each user is: Udacity :large_blue_circle:
+
 ## TL;DR
 
 To get started developing right away:
