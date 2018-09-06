@@ -2,7 +2,7 @@
 import React, { Component, Fragment } from 'react'
 import '../style/style.css'
 import { connect } from 'react-redux'
-import { Route, Redirect, withRouter } from 'react-router-dom'
+import { Route, withRouter, Redirect } from 'react-router-dom'
 import LoadingBar from 'react-redux-loading'
 import { handleInitialData } from '../actions/shared'
 import Dashboard from './Dashboard'
@@ -23,13 +23,13 @@ class App extends Component {
   checkAuthedUser() {
     const { authedUser } = this.props
     return authedUser === null
-      ? <Redirect to='/login' />
+      ? <Redirect from='/' to='/login' />
       : <div>
           <Nav />
-          <Redirect to='/dashboard' />
+         
+            <Redirect to='/dashboard' />
         </div>
-  }
-
+  } 
   render() {
     const { loading } = this.props
     return (
@@ -41,25 +41,15 @@ class App extends Component {
           : <Fragment>
               {this.checkAuthedUser()}
               <Route
-                exact path='/login'
-                component={Login}
-              />
+                exact path='/login'component={Login} /> 
               <Route
-                exact path='/dashboard'
-                component={Dashboard}
-              />
+                exact path='/dashboard' component={Dashboard} />
               <Route
-                exact path='/leaderBoard'
-                component={LeaderBoard}
-              />
+                exact path='/leaderBoard' component={LeaderBoard} />
               <Route
-                exact path='/add'
-                component={AddQuestion}
-              />
+                exact path='/add' component={AddQuestion} />
               <Route
-                exact path='/questions/:id'
-                component={QuestionDetail}
-              />
+                exact path='/questions/:id' component={QuestionDetail} />
           </Fragment>}
       </Fragment>
     )

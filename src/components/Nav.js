@@ -30,7 +30,7 @@ class Nav extends React.Component {
           <NavLink
             className='link'
             exact to='/add'>
-            Create Question
+            Create a Question
           </NavLink>
         </div>
         <div className="user-menu">

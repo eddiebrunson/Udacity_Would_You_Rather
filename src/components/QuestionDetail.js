@@ -45,7 +45,7 @@ class QuestionDetail extends Component {
 
   checkAnswerByAuthed() {
     
-    const { question, user } = this.props
+    const { question, user, id } = this.props
     const option1 = Object.keys(question).filter(answer => answer === 'optionOne')
     const option2 = Object.keys(question).filter(answer => answer === 'optionTwo')
 
@@ -74,21 +74,48 @@ class QuestionDetail extends Component {
                         <option value={option1}>{question.optionOne.text}</option>
                         <option value={option2}>{question.optionTwo.text}</option>
                       </select>
-                      <input type="submit" value="Submit" />
+                      {/*<input type="submit" value="Submit" />*/ }
+                      <button className='btn' onClick={(e) => this.handleQuestionAnswer(e, id, 'optionOne')}>Vote</button>
+
                     </form>
                   </div>
               : null
   }
-
   render() {
     const { author, users, question } = this.props
     if ( !question)
     return (
-        <div className='question-not-found-error'>
-          <h1 className='center'>404 Error</h1>
-          <p className='center'>Oops... It appears the question you are trying to reach doesn't exist</p>
-          <p className='center'>Use the links above to view the question list or add the question to the list</p>
-        </div>
+      <Fragment>
+          { author === null
+            ? <div className='question-not-found-error'>
+              <h1 className='center'>404 Error</h1>
+              <Link to='/dashboard'>
+               Back
+              </Link>
+              <p className='center'>The question you are trying to reach doesn't exist</p>
+              <p className='center'>Use the back buttom below, to go back.</p>
+              </div>
+            : <div className='question-detail-link'>
+              <Link to='/login'>
+               Back
+              </Link>
+              <div className='question-detail'>
+              <div className="question-user">
+                  <img src={users[author].avatarURL} alt={users[author].name}/>
+                  <div className="question-name-date">
+                    <p>{users[author].name}</p>
+                    <p>{this.displayDate(question.timestamp)}</p>
+                  </div>
+                  <div className="question-social">
+                  </div>
+                </div>
+                <div className="question-title">
+                  <h1>WOULD YOU RATHER</h1>
+                </div>
+                {this.checkAnswerByAuthed()}
+              </div>
+            </div> }  
+      </Fragment>
     )
     return (
       <Fragment>
@@ -96,7 +123,7 @@ class QuestionDetail extends Component {
           ? <Redirect to='/login' />
           : <div className='question-detail-link'>
               <Link to='/dashboard'>
-               /> Back
+              Back
               </Link>
               <div className='question-detail'>
                 <div className="question-user">
@@ -105,7 +132,6 @@ class QuestionDetail extends Component {
                     <p>{users[author].name}</p>
                     <p>{this.displayDate(question.timestamp)}</p>
                   </div>
-                   
                   <div className="question-social">
                   </div>
                 </div>

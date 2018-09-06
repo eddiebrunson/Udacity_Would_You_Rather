@@ -1,13 +1,13 @@
 import { SET_AUTHED_USER } from '../actions/authedUser'
 
-const auth = (store) => (next) => (action) => {
+const auth = store => next => action => {
   if ( action.type === SET_AUTHED_USER ) {
-    let passwords = []
-    passwords[0] = "Udacity"
-    let password = prompt("Enter your password, please.")
+    let passwords = [];
+    passwords[0] = "Udacity";
+    let password = prompt("Enter your password, please.");
     if (passwords.indexOf(password) === -1) {
-      alert("Invaild please try again!")
-      return store
+      alert("Invaild please try again!");
+      action.id = null;
     }
   }
   return next(action)
