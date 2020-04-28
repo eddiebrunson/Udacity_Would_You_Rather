@@ -33,6 +33,7 @@ class Nav extends React.Component {
             Create a Question
           </NavLink>
         </div>
+
         <div className="user-menu">
           <img src={users[user].avatarURL} alt={`Avatar of ${users[user].name}`}/>
           <p>{`Welcome ${users[user].name}`}</p>
@@ -54,7 +55,7 @@ function mapStateToProps ({ authedUser, users }){
   const user = Object.values(authedUser)
   return {
     users,
-    user: user,
+    user
   }
 }
 

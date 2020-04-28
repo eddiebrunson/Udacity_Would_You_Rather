@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 
 import User from './User.js'
 
@@ -20,11 +21,21 @@ class Login extends React.Component {
     }
     handleChange = (e) => {
         const username = e.target.value
+        e.preventDefault();
         this.setState(() => ({username}))
     }
 
   render() {
     const { usersIds } = this.props
+    const { from } = this.props.location.state || {
+      from: { pathname: '/home' }
+    };
+    const { redirect } = this.state;
+
+    if (redirect) {
+      return <Redirect to={from} />;
+    }
+
     return (
       <div className='login'>
         <h1>Pick your avatar, please!</h1>

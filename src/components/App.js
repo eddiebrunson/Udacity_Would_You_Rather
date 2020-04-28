@@ -2,7 +2,7 @@
 import React, { Component, Fragment } from 'react'
 import '../style/style.css'
 import { connect } from 'react-redux'
-import { Route, withRouter, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Route, withRouter, Switch } from 'react-router-dom'
 import LoadingBar from 'react-redux-loading'
 import { handleInitialData } from '../actions/shared'
 import Dashboard from './Dashboard'
@@ -11,56 +11,63 @@ import Login from './Login'
 import LeaderBoard from './LeaderBoard'
 import AddQuestion from './AddQuestion'
 import QuestionDetail from './QuestionDetail'
-
+import PrivateRoute from './PrivateRoute'
+import Error404 from './Error404'
 
 class App extends Component {
-
-  componentDidMount() {
+  componentDidMount(){
     const {dispatch} = this.props
     dispatch(handleInitialData())
   }
 
-  checkAuthedUser() {
+ /* } checkAuthedUser() {
     const { authedUser } = this.props
     return authedUser === null
-      ? <Redirect from='/' to='/login' />
+      ? <Redirect to='/login' />
       : <div>
           <Nav />
-         
-            <Redirect to='/dashboard' />
+          <Redirect to='/dashboard' />
         </div>
-  } 
+ }       */
+
   render() {
-    const { loading } = this.props
+
+  /* const { loading } = this.props */
     return (
+      <Router>
       <Fragment>
-        <LoadingBar style={{ backgroundColor: 'blue', height: '12px' }}/>
-        {/* Displaying content only if data is loaded */}
-        { loading === 1
-          ? null
-          : <Fragment>
-              {this.checkAuthedUser()}
-              <Route
-                exact path='/login'component={Login} /> 
-              <Route
-                exact path='/dashboard' component={Dashboard} />
-              <Route
-                exact path='/leaderBoard' component={LeaderBoard} />
-              <Route
-                exact path='/add' component={AddQuestion} />
-              <Route
-                exact path='/questions/:id' component={QuestionDetail} />
-          </Fragment>}
+
+        <LoadingBar style={{ backgroundColor: 'blue' , height: '12px' }} />
+      {/* Displaying content only if data is loaded */}
+      
+       {this.props.loading === true
+       ? null : (
+      
+                  <Switch>
+                    <Route path='/' exact component={Login} />
+                    <PrivateRoute exact path='/dashboard' component={Dashboard} />
+                    <PrivateRoute path='/questions/:id' component={QuestionDetail} />
+                    <PrivateRoute path='/add' component={AddQuestion} />
+                    <PrivateRoute path='/leaderboard' component={LeaderBoard} />
+                    <Route path='/error' component={Error404} />
+                    <Route component={Error404} />
+                </Switch>
+
+      
+      )}
       </Fragment>
-    )
+      </Router>
+
+   )   
+    
   }
 }
 
-function mapStateToProps ({ authedUser, loadingBar }) {
+function mapStateToProps ({ loading, authedUser }) {
   return {
-    loading: loadingBar.default,
+    loading: authedUser === null,
     authedUser,
   }
 }
 
-export default withRouter(connect(mapStateToProps)(App))
+export default withRouter(connect(mapStateToProps)(App));
